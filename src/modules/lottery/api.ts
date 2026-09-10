@@ -10,7 +10,7 @@ export class LotteryAPI {
     return PlTokensBalanceResponseSchema.parse(r)
   }
 
-  async getActiveLottry(): Promise<ActiveLotteryResponse> {
+  async getActiveLottery(): Promise<ActiveLotteryResponse> {
     const r = await this.client.get("/lottery/active")
     return ActiveLotteryResponseSchema.parse(r)
   }

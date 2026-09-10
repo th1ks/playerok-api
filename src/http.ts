@@ -138,6 +138,7 @@ export class HttpClient {
   private async request<T>(
     method: HttpMethod,
     path: string,
+    isBff: boolean,
     body?: unknown,
     reqOptions?: RequestOptions,
   ): Promise<T> {
@@ -145,6 +146,7 @@ export class HttpClient {
       this.dispatch<T>(
         method,
         path,
+        isBff,
         body,
         reqOptions,
       ),
@@ -154,6 +156,7 @@ export class HttpClient {
   private async dispatch<T>(
     method: HttpMethod,
     path: string,
+    isBff: boolean,
     body?: unknown,
     reqOptions?: RequestOptions,
   ): Promise<T> {
@@ -197,8 +200,9 @@ export class HttpClient {
       );
 
       try {
+        const url = isBff ? `${this.baseUrl}${path}` : `https://playerok.com/rest-api/public${path}`
         const response = await this.fetchImpl(
-          `${this.baseUrl}${path}`,
+          `${url}`,
           {
             ...options,
             signal: controller.signal,
@@ -367,11 +371,13 @@ export class HttpClient {
   /** Выполняет GET-запрос и возвращает разобранный JSON-ответ. */
   async get(
     path: string,
+    isBff = true,
     options?: RequestOptions,
   ): Promise<unknown> {
     return this.request(
       "GET",
       path,
+      isBff,
       undefined,
       options,
     );
@@ -382,10 +388,12 @@ export class HttpClient {
     path: string,
     body: unknown,
     options?: RequestOptions,
+    isBff = true,
   ): Promise<unknown> {
     return this.request(
       "POST",
       path,
+      isBff,
       body,
       options,
     );
@@ -396,10 +404,12 @@ export class HttpClient {
     path: string,
     body: unknown,
     options?: RequestOptions,
+    isBff = true,
   ): Promise<unknown> {
     return this.request(
       "PUT",
       path,
+      isBff,
       body,
       options,
     );
@@ -408,11 +418,13 @@ export class HttpClient {
   /** Выполняет DELETE-запрос. */
   async delete(
     path: string,
+    isBff = true,
     options?: RequestOptions,
   ): Promise<unknown> {
     return this.request(
       "DELETE",
       path,
+      isBff,
       undefined,
       options,
     );

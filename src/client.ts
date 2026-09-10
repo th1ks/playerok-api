@@ -1,8 +1,10 @@
 import { HttpClient, type HttpClientOptions } from "./http.js";
 import { AuthAPI } from "./modules/auth/api.js";
 import { BannerAPI } from "./modules/banners/api.js";
+import { CategoryAPI } from "./modules/category/api.js";
 import { FileAPI } from "./modules/file/api.js";
 import { ItemsAPI } from "./modules/items/api.js";
+import { LotteryAPI } from "./modules/lottery/api.js";
 import { TopReviewsAPI } from "./modules/reviews/top-reviews/api.js";
 import { UsersAPI } from "./modules/users/api.js";
 import { ViewerAPI } from "./modules/viewer/api.js";
@@ -12,7 +14,7 @@ export interface PlayerokClientOptions extends HttpClientOptions {
   baseUrl?: string;
 }
 
-const DEFAULT_BASE_URL = "https://bff.playerok.com/rest-api/public";
+const DEFAULT_BFF_URL = "https://bff.playerok.com/rest-api/public";
 
 /**
  * Главный клиент для работы с Playerok API.
@@ -47,10 +49,14 @@ export class PlayerokClient {
   public readonly items: ItemsAPI;
   /** Метод получения топа отзывов */
   public readonly topReviews: TopReviewsAPI;
+  /** Метод работы с лотереей */
+  public readonly lottery: LotteryAPI;
+  /** Метод работы с категориями */
+  public readonly category: CategoryAPI;
 
   /** Создаёт клиент и инициализирует все API-модули. */
   constructor(options: PlayerokClientOptions = {}) {
-    const { baseUrl = DEFAULT_BASE_URL, ...httpOptions } = options;
+    const { baseUrl = DEFAULT_BFF_URL, ...httpOptions } = options;
 
     this.http = new HttpClient(baseUrl, httpOptions);
 
@@ -61,5 +67,7 @@ export class PlayerokClient {
     this.banners = new BannerAPI(this.http);
     this.items = new ItemsAPI(this.http);
     this.topReviews = new TopReviewsAPI(this.http);
+    this.lottery = new LotteryAPI(this.http),
+    this.category = new CategoryAPI(this.http)
   }
 }

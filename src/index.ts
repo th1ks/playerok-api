@@ -27,8 +27,15 @@ export type {
   UploadFields,
   UploadFileResponse,
 } from "./modules/file/types.js";
+export { CategoryAPI } from "./modules/category/api.js";
+export type { CategoryStatResponse } from "./modules/category/types.js";
 export { ItemsAPI } from "./modules/items/api.js";
 export type { ItemPauseResponse } from "./modules/items/types.js";
+export { LotteryAPI } from "./modules/lottery/api.js";
+export type {
+  ActiveLotteryResponse,
+  PlTokensBalanceResponse,
+} from "./modules/lottery/types.js";
 export { TopReviewsAPI } from "./modules/reviews/top-reviews/api.js";
 export type {
   ReviewDeal,
