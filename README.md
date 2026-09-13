@@ -11,7 +11,7 @@ TypeScript-библиотека для работы с [Playerok REST API](https
 ## Использование
 
 ```typescript
-import { PlayerokClient } from "playerok-api";
+import { PlayerokClient } from "playerok-sdk";
 
 const client = new PlayerokClient({
   token: process.env.PLAYEROK_TOKEN,
@@ -23,13 +23,15 @@ console.log(viewer);
 
 ## Доступные методы
 
-- client.auth 
-- client.viewer
-- client.file  
-- client.users 
-- client.banners
-- client.http
-- client.items
+- client.auth / Работа с авторизацией
+- client.viewer / Работа с пользователем
+- client.file / Работа с файлами
+- client.users / Работа с пользователями 
+- client.banners / Работа с баннерами
+- client.http / Http клиент
+- client.items / Работа с товарами
+- clinet.reviews / Работа с отзывами
+- client.catalog / Методы каталога
 
 ## Авторизация
 

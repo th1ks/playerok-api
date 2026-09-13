@@ -7,7 +7,7 @@ import type { ItemsResponse } from "../types";
 export class CatalogTopItemsAPI {
   constructor(private client: HttpClient) { }
 
-  public async getItems(filter: BaseFilter, pagination?: BaseCatalogPagination): Promise<ItemsResponse> {
+  public async getItems(filter: BaseFilter = {}, pagination: BaseCatalogPagination = {}): Promise<ItemsResponse> {
     const validFilter = BaseFilterSchema.parse(filter)
     const validPagination = BaseCatalogPaginationSchema.parse(pagination)
 
