@@ -5,7 +5,7 @@ import { CatalogAPI } from "./modules/catalog/api.js";
 import { FileAPI } from "./modules/file/api.js";
 import { ItemsAPI } from "./modules/items/api.js";
 import { LotteryAPI } from "./modules/lottery/api.js";
-import { TopReviewsAPI } from "./modules/reviews/top-reviews/api.js";
+import { ReviewsAPI } from "./modules/reviews/api.js";
 import { UsersAPI } from "./modules/users/api.js";
 import { ViewerAPI } from "./modules/viewer/api.js";
 
@@ -50,7 +50,7 @@ export class PlayerokClient {
   public readonly users: UsersAPI;
   public readonly banners: BannerAPI;
   public readonly items: ItemsAPI;
-  public readonly topReviews: TopReviewsAPI;
+  public readonly reviews: ReviewsAPI;
   public readonly lottery: LotteryAPI;
   public readonly catalog: CatalogAPI;
 
@@ -78,7 +78,7 @@ export class PlayerokClient {
     this.users = new UsersAPI(this.http);
     this.banners = new BannerAPI(this.http);
     this.items = new ItemsAPI(this.http);
-    this.topReviews = new TopReviewsAPI(this.http);
+    this.reviews = new ReviewsAPI(this.http);
     this.lottery = new LotteryAPI(this.http);
     this.catalog = new CatalogAPI(this.http);
   }

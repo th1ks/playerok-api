@@ -1,7 +1,7 @@
 {
-  "name": "playerok-api",
-  "version": "0.1.0",
-  "description": "Optimal, zero-config-fuss TypeScript starter",
+  "name": "playerok-sdk",
+  "version": "1.0.0",
+  "description": "Unofficial SDK for Playerok Rest API",
   "type": "module",
   "packageManager": "pnpm@10.26.1",
   "engines": {

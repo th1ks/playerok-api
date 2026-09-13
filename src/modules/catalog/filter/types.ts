@@ -6,5 +6,5 @@ export type PriceRange = z.infer<typeof PriceRangeSchema>
 export type Attribute = z.infer<typeof AttributeSchema>
 export type BaseFilter = z.infer<typeof BaseFilterSchema>
 export type ItemsFilter = z.infer<typeof ItemsFilterSchema>
-export type ItemsCatalogPagination = z.infer<typeof ItemsCatalogPaginationSchema>
-export type BaseCatalogPagination = z.infer<typeof BaseCatalogPaginationSchema>
+export type ItemsCatalogPagination = z.input<typeof ItemsCatalogPaginationSchema>
+export type BaseCatalogPagination = z.input<typeof BaseCatalogPaginationSchema>
