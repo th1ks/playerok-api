@@ -7,19 +7,19 @@ TypeScript-библиотека для работы с [Playerok REST API](https
 ## Установка
 
 ```bash
-pnpm add playerok-sdk
+pnpm add playerok-api
 ```
 
 Или с помощью npm:
 
 ```bash
-npm install playerok-sdk
+npm install playerok-api
 ```
 
 ## Использование
 
 ```typescript
-import { PlayerokClient } from "playerok-sdk";
+import { PlayerokClient } from "playerok-api";
 
 const client = new PlayerokClient({
   token: process.env.PLAYEROK_TOKEN,

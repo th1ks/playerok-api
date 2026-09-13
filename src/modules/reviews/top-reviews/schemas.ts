@@ -10,7 +10,6 @@ export const ReviewUserSchema = GetUserByUsernameResponseSchema.omit({
   isVip: z.boolean().nullable(),
 });
 
-
 export const ReviewDealItemSchema = ItemSummarySchema.extend({
   attachmentUrl: z.string(),
 });

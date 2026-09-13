@@ -1,5 +1,5 @@
 {
-  "name": "playerok-sdk",
+  "name": "playerok-api",
   "version": "0.1.0",
   "description": "Unofficial TypeScript SDK for the Playerok REST API",
   "keywords": [
