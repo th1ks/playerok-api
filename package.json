@@ -19,9 +19,14 @@
   "files": [
     "dist"
   ],
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
+    "test": "tsx --test tests/catalog-items.test.ts",
+    "test:integration": "node --env-file=.env --import tsx --test tests/catalog-items.integration.test.ts tests/catalog-filters.integration.test.ts tests/endpoints.integration.test.ts",
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
@@ -40,7 +45,6 @@
     "tsup": "^8.5.1",
     "tsx": "^4.23.12",
     "typedoc": "^0.28.20",
-    "typescript": "^5.9.3",
-    "zod": "^4.4.3"
+    "typescript": "^5.9.3"
   }
 }

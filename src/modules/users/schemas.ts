@@ -1,16 +1,11 @@
 import { z } from "zod";
-import { AvatarSchema } from "../viewer/model/avatar.schema.js";
+import { ProfileSchema } from "../viewer/model/profile.schema.js";
 import { RoleSchema } from "../viewer/model/role.schema.js";
-import type { GetUserByUsernameResponse } from "./types.js";
 
-export const GetUserByUsernameResponseSchema = z.object({
-  id: z.string(),
+export const GetUserByUsernameResponseSchema = ProfileSchema.extend({
   username: z.string().nullable(),
   role: RoleSchema,
   isBlocked: z.boolean(),
-  avatarURL: z.string().nullable(),
-  avatar: AvatarSchema.nullable(),
   rating: z.number(),
-  testimonialCounter: z.number(),
   createdAt: z.string(),
-}) satisfies z.ZodType<GetUserByUsernameResponse>;
+});

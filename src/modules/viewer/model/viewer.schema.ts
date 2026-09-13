@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { ProfileSchema } from "./profile.schema.js";
 import { RoleSchema } from "./role.schema.js";
-import type { Viewer } from "./types.js";
 
 export const ViewerSchema = z.object({
   id: z.string(),
@@ -20,4 +19,4 @@ export const ViewerSchema = z.object({
   unreadChatsCounter: z.number(),
   supportChatId: z.string().nullable(),
   systemChatId: z.string().nullable(),
-}) satisfies z.ZodType<Viewer>;
+});

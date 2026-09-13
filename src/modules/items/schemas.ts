@@ -1,5 +1,12 @@
 import { z } from "zod";
-import type { ItemPauseResponse } from "./types.js";
+
+export const ItemSummarySchema = z.object({
+  id: z.string(),
+  slug: z.string(),
+  name: z.string(),
+  price: z.number(),
+  rawPrice: z.number(),
+});
 
 export const ItemPauseResponseSchema = z.object({
   success: z.boolean(),
@@ -7,4 +14,4 @@ export const ItemPauseResponseSchema = z.object({
   pauseAvailable: z.boolean().optional(),
   republishAvailable: z.boolean().optional(),
   mayBePublished: z.boolean().optional(),
-}) satisfies z.ZodType<ItemPauseResponse>;
+});

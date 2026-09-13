@@ -1,11 +1,10 @@
-/** Результат проверки доступности имени пользователя. */
-export interface UsernameAvailabilityResponse {
-  /** Занято ли указанное имя пользователя. */
-  isTaken: boolean;
-}
+import type { z } from "zod";
+import type {
+  RegisterViewerRequestSchema,
+  UsernameAvailabilityResponseSchema,
+} from "./schemas.js";
 
-/** Тело запроса завершения регистрации пользователя. */
-export interface RegisterViewerRequest {
-  /** Имя пользователя, которое нужно установить. */
-  username: string;
-}
+export type UsernameAvailabilityResponse = z.infer<
+  typeof UsernameAvailabilityResponseSchema
+>;
+export type RegisterViewerRequest = z.infer<typeof RegisterViewerRequestSchema>;

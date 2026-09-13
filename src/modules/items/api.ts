@@ -6,6 +6,14 @@ import type { ItemPauseResponse } from "./types";
 export class ItemsAPI {
   constructor(private client: HttpClient) { }
 
+  private async updatePublication(
+    itemId: string,
+    action: "discontinue" | "republish",
+  ): Promise<ItemPauseResponse> {
+    const response = await this.client.post(`/item/${itemId}/${action}`, {});
+    return ItemPauseResponseSchema.parse(response);
+  }
+
   /**
    * Останавливает публикацию товара.
    *
@@ -15,8 +23,7 @@ export class ItemsAPI {
    * @throws {UnauthorizedError} Если токен недействителен.
    */
   public async discontinueItem(itemId: string): Promise<ItemPauseResponse> {
-    const rq = await this.client.post(`/item/${itemId}/discontinue`, {})
-    return ItemPauseResponseSchema.parse(rq)
+    return this.updatePublication(itemId, "discontinue");
   }
 
   /**
@@ -28,7 +35,6 @@ export class ItemsAPI {
    * @throws {UnauthorizedError} Если токен недействителен.
    */
   public async republishItem(itemId: string): Promise<ItemPauseResponse> {
-    const rq = await this.client.post(`/item/${itemId}/republish`, {})
-    return ItemPauseResponseSchema.parse(rq)
+    return this.updatePublication(itemId, "republish");
   }
 }

@@ -15,11 +15,10 @@ import { ViewerSchema } from "./model/viewer.schema.js";
 import { ViewerNotificationsSchema } from "./notifications/schemas.js";
 import type { ViewerNotification } from "./notifications/types.js";
 import type { UsernameAvailabilityResponse } from "./registration/types.js";
-import { ValidationError } from "../../error.js";
 import { RegisterViewerRequestSchema, UsernameAvailabilityResponseSchema } from "./registration/schemas.js";
-import { isUsernameValid } from "../../util.js";
-import { ChoosenCardResponseSchmea } from "./cards/schemas.js";
-import type { ChoosenCardResponse } from "./cards/types.js";
+import { assertUsername } from "../../util.js";
+import { ChosenCardResponseSchema } from "./cards/schemas.js";
+import type { ChosenCardResponse } from "./cards/types.js";
 
 /** Методы текущего авторизованного пользователя Playerok. */
 export class ViewerAPI {
@@ -77,14 +76,14 @@ export class ViewerAPI {
   }
 
   /** Возвращает выбранную платёжную карту либо `null`, если карта не выбрана. */
-  async getChoosenCard(): Promise<ChoosenCardResponse | null> {
+  async getChosenCard(): Promise<ChosenCardResponse | null> {
     const r = await this.client.get("/viewer/chosen-card")
 
     if (r == null) {
       return null
     }
 
-    return ChoosenCardResponseSchmea.parse(r)
+    return ChosenCardResponseSchema.parse(r)
   }
 
   /**
@@ -97,9 +96,7 @@ export class ViewerAPI {
    * Если передано невалидное имя пользователя.
    */
   async checkUsernameAvailability(username: string): Promise<UsernameAvailabilityResponse> {
-    if (!isUsernameValid(username)) {
-      throw new ValidationError(username, "Имя пользователя должно быть валидным!")
-    }
+    assertUsername(username);
 
     const r = await this.client.get(`/viewer/username-availability?username=${username}`)
     return UsernameAvailabilityResponseSchema.parse(r)
@@ -119,9 +116,7 @@ export class ViewerAPI {
    * @returns Профиль пользователя
    */
   async completeRegistration(username: string): Promise<Viewer> {
-    if (!isUsernameValid(username)) {
-      throw new ValidationError(username, "Имя пользователя должно быть валидным!")
-    }
+    assertUsername(username);
 
     const body = RegisterViewerRequestSchema.parse({username: username})
 

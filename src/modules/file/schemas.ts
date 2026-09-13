@@ -1,9 +1,4 @@
 import { z } from "zod";
-import type {
-  ConfirmUploadFileRequest,
-  UploadFields,
-  UploadFileResponse,
-} from "./types.js";
 
 export const UploadFieldsSchema = z.object({
   bucket: z.string(),
@@ -13,7 +8,7 @@ export const UploadFieldsSchema = z.object({
   key: z.string(),
   Policy: z.string(),
   "X-Amz-Signature": z.string(),
-}) satisfies z.ZodType<UploadFields>;
+});
 
 export const UploadUrlSchema = z
   .object({
@@ -26,8 +21,8 @@ export const UploadUrlSchema = z
     url: data.url.startsWith("http") ? data.url : `https://${data.url}`,
     fields: data.fields,
     file_id: data.file_id || data.fileId,
-  })) satisfies z.ZodType<UploadFileResponse>;
+  }));
 
 export const ConfirmUploadFileRequestSchema = z.object({
   id: z.string(),
-}) satisfies z.ZodType<ConfirmUploadFileRequest>;
+});

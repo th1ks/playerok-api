@@ -27,6 +27,15 @@ export interface HttpClientOptions {
   fetch?: typeof fetch;
 }
 
+/** Адреса поддерживаемых Playerok API. */
+export interface HttpClientUrls {
+  api: string;
+  bff: string;
+  rest: string;
+}
+
+export type ApiHost = keyof HttpClientUrls;
+
 export interface RequestOptions {
   /** Внешний сигнал отмены запроса. */
   signal?: AbortSignal;
@@ -58,8 +67,10 @@ export class HttpClient {
    * @param baseUrl Базовый URL без завершающего пути метода.
    * @param optionsOrToken Настройки клиента либо строка token для совместимости.
    */
+  private readonly urls: HttpClientUrls;
+
   constructor(
-    private readonly baseUrl: string,
+    baseUrlOrUrls: string | HttpClientUrls,
     optionsOrToken?: HttpClientOptions | string,
   ) {
     const options: HttpClientOptions =
@@ -68,6 +79,9 @@ export class HttpClient {
         : (optionsOrToken ?? {});
 
     this.token = options.token;
+    this.urls = typeof baseUrlOrUrls === "string"
+      ? { api: baseUrlOrUrls, bff: baseUrlOrUrls, rest: "https://playerok.com/rest-api/public" }
+      : baseUrlOrUrls;
     this.timeout = options.timeout ?? 30_000;
     this.retries = options.retries ?? 2;
     this.retryDelay = options.retryDelay ?? 500;
@@ -138,7 +152,7 @@ export class HttpClient {
   private async request<T>(
     method: HttpMethod,
     path: string,
-    isBff: boolean,
+    isBff: ApiHost | boolean,
     body?: unknown,
     reqOptions?: RequestOptions,
   ): Promise<T> {
@@ -156,7 +170,7 @@ export class HttpClient {
   private async dispatch<T>(
     method: HttpMethod,
     path: string,
-    isBff: boolean,
+    isBff: ApiHost | boolean,
     body?: unknown,
     reqOptions?: RequestOptions,
   ): Promise<T> {
@@ -200,7 +214,10 @@ export class HttpClient {
       );
 
       try {
-        const url = isBff ? `${this.baseUrl}${path}` : `https://playerok.com/rest-api/public${path}`
+        const host: ApiHost = typeof isBff === "boolean"
+          ? (isBff ? "bff" : "rest")
+          : isBff;
+        const url = `${this.urls[host]}${path}`;
         const response = await this.fetchImpl(
           `${url}`,
           {
@@ -371,7 +388,7 @@ export class HttpClient {
   /** Выполняет GET-запрос и возвращает разобранный JSON-ответ. */
   async get(
     path: string,
-    isBff = true,
+    isBff: ApiHost | boolean = "bff",
     options?: RequestOptions,
   ): Promise<unknown> {
     return this.request(
@@ -387,8 +404,8 @@ export class HttpClient {
   async post(
     path: string,
     body: unknown,
+    isBff: ApiHost | boolean = "bff",
     options?: RequestOptions,
-    isBff = true,
   ): Promise<unknown> {
     return this.request(
       "POST",
@@ -403,8 +420,8 @@ export class HttpClient {
   async put(
     path: string,
     body: unknown,
+    isBff: ApiHost | boolean = "bff",
     options?: RequestOptions,
-    isBff = true,
   ): Promise<unknown> {
     return this.request(
       "PUT",
@@ -418,7 +435,7 @@ export class HttpClient {
   /** Выполняет DELETE-запрос. */
   async delete(
     path: string,
-    isBff = true,
+    isBff: ApiHost | boolean = "bff",
     options?: RequestOptions,
   ): Promise<unknown> {
     return this.request(

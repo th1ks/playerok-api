@@ -1,11 +1,6 @@
 import { z } from "zod";
-import type {
-  NotificationProvider,
-  ViewerNotification,
-  ViewerNotifications,
-} from "./types.js";
 
-export const NotificationProviderSchema = z.string() satisfies z.ZodType<NotificationProvider>;
+export const NotificationProviderSchema = z.string();
 
 export const ViewerNotificationSchema = z.object({
   name: z.string(),
@@ -15,8 +10,6 @@ export const ViewerNotificationSchema = z.object({
   disabledFor: z.string().nullable(),
   id: NotificationProviderSchema,
   props: z.record(z.string(), z.unknown()).nullable(),
-}) satisfies z.ZodType<ViewerNotification>;
+});
 
-export const ViewerNotificationsSchema = z.array(
-  ViewerNotificationSchema,
-) satisfies z.ZodType<ViewerNotifications>;
+export const ViewerNotificationsSchema = z.array(ViewerNotificationSchema);

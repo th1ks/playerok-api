@@ -6,12 +6,12 @@ export class LotteryAPI {
   constructor(private client: HttpClient) { }
 
   async getPlTokensBalance(): Promise<PlTokensBalanceResponse> {
-    const r = await this.client.get("/pl-tokens/balance")
+    const r = await this.client.get("/pl-tokens/balance", "rest")
     return PlTokensBalanceResponseSchema.parse(r)
   }
 
   async getActiveLottery(): Promise<ActiveLotteryResponse> {
-    const r = await this.client.get("/lottery/active")
+    const r = await this.client.get("/lottery/active", "rest")
     return ActiveLotteryResponseSchema.parse(r)
   }
 }

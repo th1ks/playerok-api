@@ -1,5 +1,4 @@
 import { z } from "zod";
-import type { Role } from "./types.js";
 
 export const RoleSchema = z.enum([
   "USER",
@@ -19,4 +18,9 @@ export const RoleSchema = z.enum([
   "SECURITY",
   "SUPPORT",
   "SYSTEM_SELLER",
-]) satisfies z.ZodType<Role>;
+]);
+
+export const SellerTypeSchema = z.enum([
+  "SYSTEM",
+  "USER"
+])

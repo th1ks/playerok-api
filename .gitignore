@@ -26,6 +26,7 @@ pnpm-debug.log*
 coverage/
 test-results/
 .nyc_output/
+/tests/
 
 # Temporary / cache
 *.tmp

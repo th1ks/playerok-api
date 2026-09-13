@@ -1,17 +1,5 @@
-/** Ответ остановки или переопубликации товара. */
-export interface ItemPauseResponse {
-  /** Успешно ли выполнена операция. */
-  success: boolean;
+import type { z } from "zod";
+import type { ItemPauseResponseSchema, ItemSummarySchema } from "./schemas.js";
 
-  /** Текущий статус публикации товара. */
-  status?: string | undefined;
-
-  /** Можно ли остановить публикацию товара. */
-  pauseAvailable?: boolean | undefined;
-
-  /** Можно ли переопубликовать товар. */
-  republishAvailable?: boolean | undefined;
-
-  /** Может ли товар быть опубликован. */
-  mayBePublished?: boolean | undefined;
-}
+export type ItemSummary = z.infer<typeof ItemSummarySchema>;
+export type ItemPauseResponse = z.infer<typeof ItemPauseResponseSchema>;

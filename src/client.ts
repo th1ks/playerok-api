@@ -1,7 +1,7 @@
 import { HttpClient, type HttpClientOptions } from "./http.js";
 import { AuthAPI } from "./modules/auth/api.js";
 import { BannerAPI } from "./modules/banners/api.js";
-import { CategoryAPI } from "./modules/category/api.js";
+import { CatalogAPI } from "./modules/catalog/api.js";
 import { FileAPI } from "./modules/file/api.js";
 import { ItemsAPI } from "./modules/items/api.js";
 import { LotteryAPI } from "./modules/lottery/api.js";
@@ -9,12 +9,21 @@ import { TopReviewsAPI } from "./modules/reviews/top-reviews/api.js";
 import { UsersAPI } from "./modules/users/api.js";
 import { ViewerAPI } from "./modules/viewer/api.js";
 
+
 export interface PlayerokClientOptions extends HttpClientOptions {
-  /** Базовый URL REST API. По умолчанию используется публичный Playerok API. */
+  /** Старый алиас для bffUrl. Сохраняется для обратной совместимости. */
   baseUrl?: string;
+  /** URL нового API. */
+  apiUrl?: string;
+  /** URL BFF API. */
+  bffUrl?: string;
+  /** URL публичного REST API. */
+  restUrl?: string;
 }
 
+const DEFAULT_API_URL = "https://api.playerok.com";
 const DEFAULT_BFF_URL = "https://bff.playerok.com/rest-api/public";
+const DEFAULT_REST_URL = "https://playerok.com/rest-api/public";
 
 /**
  * Главный клиент для работы с Playerok API.
@@ -33,32 +42,35 @@ const DEFAULT_BFF_URL = "https://bff.playerok.com/rest-api/public";
  * ```
  */
 export class PlayerokClient {
-  /** Низкоуровневый HTTP-клиент с retry, timeout, cookie-store и rate limit. */
   public readonly http: HttpClient;
-  /** Методы авторизации через email и одноразовый код. */
+
   public readonly auth: AuthAPI;
-  /** Методы профиля, уведомлений, чатов и выбранной карты. */
   public readonly viewer: ViewerAPI;
-  /** Методы загрузки обычных и avatar-файлов. */
   public readonly file: FileAPI;
-  /** Методы поиска пользователей. */
   public readonly users: UsersAPI;
-  /** Методы получения рекламных баннеров. */
   public readonly banners: BannerAPI;
-  /** Методы управления публикацией товаров. */
   public readonly items: ItemsAPI;
-  /** Метод получения топа отзывов */
   public readonly topReviews: TopReviewsAPI;
-  /** Метод работы с лотереей */
   public readonly lottery: LotteryAPI;
-  /** Метод работы с категориями */
-  public readonly category: CategoryAPI;
+  public readonly catalog: CatalogAPI;
 
-  /** Создаёт клиент и инициализирует все API-модули. */
   constructor(options: PlayerokClientOptions = {}) {
-    const { baseUrl = DEFAULT_BFF_URL, ...httpOptions } = options;
+    const {
+      baseUrl,
+      apiUrl = DEFAULT_API_URL,
+      bffUrl = baseUrl ?? DEFAULT_BFF_URL,
+      restUrl = DEFAULT_REST_URL,
+      ...httpOptions
+    } = options;
 
-    this.http = new HttpClient(baseUrl, httpOptions);
+    this.http = new HttpClient(
+      {
+        api: apiUrl,
+        bff: bffUrl,
+        rest: restUrl,
+      },
+      httpOptions,
+    );
 
     this.auth = new AuthAPI(this.http);
     this.viewer = new ViewerAPI(this.http);
@@ -67,7 +79,7 @@ export class PlayerokClient {
     this.banners = new BannerAPI(this.http);
     this.items = new ItemsAPI(this.http);
     this.topReviews = new TopReviewsAPI(this.http);
-    this.lottery = new LotteryAPI(this.http),
-    this.category = new CategoryAPI(this.http)
+    this.lottery = new LotteryAPI(this.http);
+    this.catalog = new CatalogAPI(this.http);
   }
 }

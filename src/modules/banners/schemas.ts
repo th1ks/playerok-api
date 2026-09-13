@@ -1,23 +1,22 @@
 import { z } from "zod";
-import type { BannerImages, PromoBanner, PromoBannersResponse } from "./types.js";
 
-const ImageSchema = z.object({
+export const BannerImagesSchema = z.object({
   sm: z.url(),
   md: z.url(),
   lg: z.url(),
   xl: z.url(),
-}) satisfies z.ZodType<BannerImages>;
+});
 
 export const BannerSchema = z.object({
-  id: z.uuidv7(),
+  id: z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i),
   name: z.string(),
   url: z.url(),
-  images: ImageSchema,
-}) satisfies z.ZodType<PromoBanner>;
+  images: BannerImagesSchema,
+});
 
 export const BannersResponseSchema = z.object({
   items: z.array(BannerSchema),
-}) satisfies z.ZodType<PromoBannersResponse>;
+});
 
 /** Формат изображений, который нужно вернуть в баннерах. */
 export enum BannerFormat {

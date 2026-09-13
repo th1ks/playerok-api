@@ -26,11 +26,11 @@ export class TopReviewsAPI {
       throw new ValidationError(String(first), "Поле first должно быть положительным числом!");
     }
 
-    const url = after
-      ? `https://playerok.com/rest-api/public/top-reviews?pagination[first]=${first}&pagination[after]=${after}`
-      : `https://playerok.com/rest-api/public/top-reviews?pagination[first]=${first}`;
+    const query = after
+      ? `?pagination[first]=${first}&pagination[after]=${encodeURIComponent(after)}`
+      : `?pagination[first]=${first}`;
 
-    const r = await this.client.get(url);
+    const r = await this.client.get(`/top-reviews${query}`, "rest");
     return TopReviewsResponseSchema.parse(r);
   }
 }
