@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ItemSummarySchema } from "../items/schemas.js";
-import { RoleSchema, SellerTypeSchema } from "../viewer/model/role.schema.js";
 import { ProfileSchema } from "../viewer/model/profile.schema.js";
+import { RoleSchema, SellerTypeSchema } from "../viewer/model/role.schema.js";
 
 export const ItemPrioritySchema = z.enum(["DEFAULT", "PREMIUM"]);
 

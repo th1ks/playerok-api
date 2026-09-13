@@ -9,7 +9,6 @@ import { ReviewsAPI } from "./modules/reviews/api.js";
 import { UsersAPI } from "./modules/users/api.js";
 import { ViewerAPI } from "./modules/viewer/api.js";
 
-
 export interface PlayerokClientOptions extends HttpClientOptions {
   /** Старый алиас для bffUrl. Сохраняется для обратной совместимости. */
   baseUrl?: string;
@@ -29,7 +28,8 @@ const DEFAULT_REST_URL = "https://playerok.com/rest-api/public";
  * Главный клиент для работы с Playerok API.
  *
  * Все специализированные модули доступны как свойства одного экземпляра:
- * `auth`, `viewer`, `file`, `users`, `banners` и `items`.
+ * `auth`, `viewer`, `file`, `users`, `banners`, `items`, `reviews`, `lottery`
+ * и `catalog`.
  *
  * @example
  * ```ts

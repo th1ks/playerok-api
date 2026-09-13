@@ -1,7 +1,23 @@
 {
   "name": "playerok-sdk",
-  "version": "1.0.0",
-  "description": "Unofficial SDK for Playerok Rest API",
+  "version": "0.1.0",
+  "description": "Unofficial TypeScript SDK for the Playerok REST API",
+  "keywords": [
+    "playerok",
+    "api",
+    "sdk",
+    "typescript"
+  ],
+  "homepage": "https://github.com/th1ks/playerok-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/th1ks/playerok-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/th1ks/playerok-sdk.git"
+  },
+  "license": "MIT",
+  "author": "th1ks",
   "type": "module",
   "packageManager": "pnpm@10.26.1",
   "engines": {
@@ -19,6 +35,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "zod": "^4.4.3"
   },
@@ -33,7 +52,6 @@
     "format": "biome check --write .",
     "check": "pnpm run typecheck && pnpm run lint",
     "clean": "rimraf dist coverage",
-    "prepare": "pnpm run build",
     "prepublishOnly": "pnpm run build",
     "docs": "typedoc",
     "docs:check": "typedoc --treatWarningsAsErrors"

@@ -3,15 +3,15 @@ import { ActiveLotteryResponseSchema, PlTokensBalanceResponseSchema } from "./sc
 import type { ActiveLotteryResponse, PlTokensBalanceResponse } from "./types";
 
 export class LotteryAPI {
-  constructor(private client: HttpClient) { }
+  constructor(private client: HttpClient) {}
 
   async getPlTokensBalance(): Promise<PlTokensBalanceResponse> {
-    const r = await this.client.get("/pl-tokens/balance", "rest")
-    return PlTokensBalanceResponseSchema.parse(r)
+    const r = await this.client.get("/pl-tokens/balance", "rest");
+    return PlTokensBalanceResponseSchema.parse(r);
   }
 
   async getActiveLottery(): Promise<ActiveLotteryResponse> {
-    const r = await this.client.get("/lottery/active", "rest")
-    return ActiveLotteryResponseSchema.parse(r)
+    const r = await this.client.get("/lottery/active", "rest");
+    return ActiveLotteryResponseSchema.parse(r);
   }
 }

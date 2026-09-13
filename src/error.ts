@@ -63,9 +63,7 @@ export function handleError(
 ): never {
   const parsed = ApiErrorSchema.safeParse(data);
 
-  const message = parsed.success
-    ? parsed.data.message
-    : `Request failed with status ${status}`;
+  const message = parsed.success ? parsed.data.message : `Request failed with status ${status}`;
 
   switch (status) {
     case 401:
@@ -78,16 +76,10 @@ export function handleError(
       throw new NotFoundError(status, message, path, data);
 
     case 409:
-      throw new ConflictError(status, message, path, data)
+      throw new ConflictError(status, message, path, data);
 
     case 429:
-      throw new RateLimitError(
-        status,
-        message,
-        path,
-        data,
-        retryAfter,
-      );
+      throw new RateLimitError(status, message, path, data, retryAfter);
 
     default:
       if (status >= 500) {

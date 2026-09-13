@@ -4,7 +4,7 @@ import type { ItemPauseResponse } from "./types";
 
 /** Методы управления публикацией товаров пользователя. */
 export class ItemsAPI {
-  constructor(private client: HttpClient) { }
+  constructor(private client: HttpClient) {}
 
   private async updatePublication(
     itemId: string,

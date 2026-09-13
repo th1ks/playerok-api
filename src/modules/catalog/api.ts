@@ -12,8 +12,8 @@ export class CatalogAPI {
 
   constructor(client: HttpClient) {
     this.category = new CatalogCategoryAPI(client);
-    this.items = new CatalogItemsAPI(client)
-    this.top = new CatalogTopItemsAPI(client)
-    this.official = new CatalogOfficialItemsAPI(client)
+    this.items = new CatalogItemsAPI(client);
+    this.top = new CatalogTopItemsAPI(client);
+    this.official = new CatalogOfficialItemsAPI(client);
   }
 }

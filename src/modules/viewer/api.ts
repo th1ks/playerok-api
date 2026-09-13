@@ -1,6 +1,9 @@
 import type { HttpClient } from "../../http.js";
+import { assertUsername } from "../../util.js";
 import { ViewerAvatarRequestSchema, ViewerAvatarResponseSchema } from "./avatar/schemas.js";
 import type { ViewerAvatarResponse } from "./avatar/types.js";
+import { ChosenCardResponseSchema } from "./cards/schemas.js";
+import type { ChosenCardResponse } from "./cards/types.js";
 import {
   ViewerChatsByTypeResponseSchema,
   ViewerUnreadChatsCounterResponseSchema,
@@ -14,11 +17,11 @@ import type { Viewer } from "./model/types.js";
 import { ViewerSchema } from "./model/viewer.schema.js";
 import { ViewerNotificationsSchema } from "./notifications/schemas.js";
 import type { ViewerNotification } from "./notifications/types.js";
+import {
+  RegisterViewerRequestSchema,
+  UsernameAvailabilityResponseSchema,
+} from "./registration/schemas.js";
 import type { UsernameAvailabilityResponse } from "./registration/types.js";
-import { RegisterViewerRequestSchema, UsernameAvailabilityResponseSchema } from "./registration/schemas.js";
-import { assertUsername } from "../../util.js";
-import { ChosenCardResponseSchema } from "./cards/schemas.js";
-import type { ChosenCardResponse } from "./cards/types.js";
 
 /** Методы текущего авторизованного пользователя Playerok. */
 export class ViewerAPI {
@@ -77,13 +80,13 @@ export class ViewerAPI {
 
   /** Возвращает выбранную платёжную карту либо `null`, если карта не выбрана. */
   async getChosenCard(): Promise<ChosenCardResponse | null> {
-    const r = await this.client.get("/viewer/chosen-card")
+    const r = await this.client.get("/viewer/chosen-card");
 
     if (r == null) {
-      return null
+      return null;
     }
 
-    return ChosenCardResponseSchema.parse(r)
+    return ChosenCardResponseSchema.parse(r);
   }
 
   /**
@@ -98,8 +101,8 @@ export class ViewerAPI {
   async checkUsernameAvailability(username: string): Promise<UsernameAvailabilityResponse> {
     assertUsername(username);
 
-    const r = await this.client.get(`/viewer/username-availability?username=${username}`)
-    return UsernameAvailabilityResponseSchema.parse(r)
+    const r = await this.client.get(`/viewer/username-availability?username=${username}`);
+    return UsernameAvailabilityResponseSchema.parse(r);
   }
 
   /**
@@ -118,10 +121,10 @@ export class ViewerAPI {
   async completeRegistration(username: string): Promise<Viewer> {
     assertUsername(username);
 
-    const body = RegisterViewerRequestSchema.parse({username: username})
+    const body = RegisterViewerRequestSchema.parse({ username: username });
 
-    const r = await this.client.post("/viewer/registration", body)
+    const r = await this.client.post("/viewer/registration", body);
 
-    return ViewerSchema.parse(r)
+    return ViewerSchema.parse(r);
   }
 }

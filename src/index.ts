@@ -6,8 +6,8 @@ export {
 } from "./cookies.js";
 export * from "./error.js";
 export {
-  HttpClient,
   type ApiHost,
+  HttpClient,
   type HttpClientOptions,
   type HttpClientUrls,
   type RequestOptions,
@@ -20,21 +20,14 @@ export type {
   SendOtpRequest,
 } from "./modules/auth/types.js";
 export { BannerAPI } from "./modules/banners/api.js";
-export { CatalogAPI } from "./modules/catalog/api.js";
-export { CatalogCategoryAPI } from "./modules/catalog/category/api.js";
 export { BannerFormat } from "./modules/banners/schemas.js";
 export type {
   BannerImages,
   PromoBanner,
   PromoBannersResponse,
 } from "./modules/banners/types.js";
-export { FileAPI } from "./modules/file/api.js";
-export type {
-  ConfirmUploadFileRequest,
-  ConfirmUploadOptions,
-  UploadFields,
-  UploadFileResponse,
-} from "./modules/file/types.js";
+export { CatalogAPI } from "./modules/catalog/api.js";
+export { CatalogCategoryAPI } from "./modules/catalog/category/api.js";
 export type { CategoryStatResponse } from "./modules/catalog/category/types.js";
 export type {
   Item,
@@ -45,6 +38,13 @@ export type {
   ItemSeller,
   ItemsResponse,
 } from "./modules/catalog/types.js";
+export { FileAPI } from "./modules/file/api.js";
+export type {
+  ConfirmUploadFileRequest,
+  ConfirmUploadOptions,
+  UploadFields,
+  UploadFileResponse,
+} from "./modules/file/types.js";
 export { ItemsAPI } from "./modules/items/api.js";
 export type { ItemPauseResponse, ItemSummary } from "./modules/items/types.js";
 export { LotteryAPI } from "./modules/lottery/api.js";
@@ -69,11 +69,11 @@ export type {
   ViewerAvatarResponse,
 } from "./modules/viewer/avatar/types.js";
 export type { ChosenCardResponse } from "./modules/viewer/cards/types.js";
-export { ChatType } from "./modules/viewer/chats/types.js";
 export type {
   ViewerChatsByTypeResponse,
   ViewerUnreadChatsCounterResponse,
 } from "./modules/viewer/chats/types.js";
+export { ChatType } from "./modules/viewer/chats/types.js";
 export type {
   Avatar,
   Profile,

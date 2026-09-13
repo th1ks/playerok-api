@@ -4,7 +4,7 @@ import { CategoryStatResponseSchema } from "./schemas";
 import type { CategoryStatResponse } from "./types";
 
 export class CatalogCategoryAPI {
-  constructor(public client: HttpClient) { }
+  constructor(public client: HttpClient) {}
 
   /**
    * Возвращает статистику по категории
@@ -14,10 +14,10 @@ export class CatalogCategoryAPI {
    * @returns Статистику по категории
    */
   public async getStat(gameId: string, gameCategoryId: string): Promise<CategoryStatResponse> {
-    assertUUID(gameId, "gameId")
-    assertUUID(gameCategoryId, "gameCategoryId")
+    assertUUID(gameId, "gameId");
+    assertUUID(gameCategoryId, "gameCategoryId");
 
-    const r = await this.client.get(`/games/${gameId}/categories/${gameCategoryId}/stat`, "rest")
-    return CategoryStatResponseSchema.parse(r)
+    const r = await this.client.get(`/games/${gameId}/categories/${gameCategoryId}/stat`, "rest");
+    return CategoryStatResponseSchema.parse(r);
   }
 }

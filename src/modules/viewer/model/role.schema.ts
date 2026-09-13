@@ -20,7 +20,4 @@ export const RoleSchema = z.enum([
   "SYSTEM_SELLER",
 ]);
 
-export const SellerTypeSchema = z.enum([
-  "SYSTEM",
-  "USER"
-])
+export const SellerTypeSchema = z.enum(["SYSTEM", "USER"]);

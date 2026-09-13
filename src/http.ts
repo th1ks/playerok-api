@@ -1,10 +1,5 @@
 import { type CookieStore, MemoryCookieStore } from "./cookies.js";
-import {
-  ApiError,
-  NetworkError,
-  TimeoutError,
-  handleError,
-} from "./error.js";
+import { ApiError, handleError, NetworkError, TimeoutError } from "./error.js";
 import { RateLimiter } from "./rate-limit.js";
 import type { HttpMethod } from "./types/common.js";
 
@@ -41,11 +36,7 @@ export interface RequestOptions {
   signal?: AbortSignal;
 }
 
-const RETRYABLE_METHODS = new Set<HttpMethod>([
-  "GET",
-  "PUT",
-  "DELETE",
-]);
+const RETRYABLE_METHODS = new Set<HttpMethod>(["GET", "PUT", "DELETE"]);
 
 /**
  * Низкоуровневый HTTP-клиент Playerok.
@@ -69,19 +60,15 @@ export class HttpClient {
    */
   private readonly urls: HttpClientUrls;
 
-  constructor(
-    baseUrlOrUrls: string | HttpClientUrls,
-    optionsOrToken?: HttpClientOptions | string,
-  ) {
+  constructor(baseUrlOrUrls: string | HttpClientUrls, optionsOrToken?: HttpClientOptions | string) {
     const options: HttpClientOptions =
-      typeof optionsOrToken === "string"
-        ? { token: optionsOrToken }
-        : (optionsOrToken ?? {});
+      typeof optionsOrToken === "string" ? { token: optionsOrToken } : (optionsOrToken ?? {});
 
     this.token = options.token;
-    this.urls = typeof baseUrlOrUrls === "string"
-      ? { api: baseUrlOrUrls, bff: baseUrlOrUrls, rest: "https://playerok.com/rest-api/public" }
-      : baseUrlOrUrls;
+    this.urls =
+      typeof baseUrlOrUrls === "string"
+        ? { api: baseUrlOrUrls, bff: baseUrlOrUrls, rest: "https://playerok.com/rest-api/public" }
+        : baseUrlOrUrls;
     this.timeout = options.timeout ?? 30_000;
     this.retries = options.retries ?? 2;
     this.retryDelay = options.retryDelay ?? 500;
@@ -99,9 +86,7 @@ export class HttpClient {
     this.token = token;
   }
 
-  private buildHeaders(
-    isFormData: boolean,
-  ): Record<string, string> {
+  private buildHeaders(isFormData: boolean): Record<string, string> {
     const headers: Record<string, string> = {
       Accept: "application/json",
     };
@@ -116,9 +101,7 @@ export class HttpClient {
       const entries = this.cookies.entries();
 
       if (entries.length > 0) {
-        headers.Cookie = entries
-          .map(([key, value]) => `${key}=${value}`)
-          .join("; ");
+        headers.Cookie = entries.map(([key, value]) => `${key}=${value}`).join("; ");
       }
     }
 
@@ -126,8 +109,7 @@ export class HttpClient {
   }
 
   private storeSetCookies(response: Response): void {
-    const setCookies: string[] =
-      response.headers.getSetCookie?.() ?? [];
+    const setCookies: string[] = response.headers.getSetCookie?.() ?? [];
 
     for (const cookie of setCookies) {
       const pair = cookie.split(";")[0];
@@ -156,15 +138,7 @@ export class HttpClient {
     body?: unknown,
     reqOptions?: RequestOptions,
   ): Promise<T> {
-    return this.limiter.run(() =>
-      this.dispatch<T>(
-        method,
-        path,
-        isBff,
-        body,
-        reqOptions,
-      ),
-    );
+    return this.limiter.run(() => this.dispatch<T>(method, path, isBff, body, reqOptions));
   }
 
   private async dispatch<T>(
@@ -174,9 +148,7 @@ export class HttpClient {
     body?: unknown,
     reqOptions?: RequestOptions,
   ): Promise<T> {
-    const isFormData =
-      typeof FormData !== "undefined" &&
-      body instanceof FormData;
+    const isFormData = typeof FormData !== "undefined" && body instanceof FormData;
 
     const options: RequestInit = {
       method,
@@ -184,62 +156,37 @@ export class HttpClient {
     };
 
     if (body !== undefined) {
-      options.body = isFormData
-        ? body
-        : JSON.stringify(body);
+      options.body = isFormData ? body : JSON.stringify(body);
     }
 
     let lastError: unknown;
 
-    for (
-      let attempt = 0;
-      attempt <= this.retries;
-      attempt++
-    ) {
+    for (let attempt = 0; attempt <= this.retries; attempt++) {
       const controller = new AbortController();
 
-      const timer = setTimeout(
-        () => controller.abort(),
-        this.timeout,
-      );
+      const timer = setTimeout(() => controller.abort(), this.timeout);
 
       const onExternalAbort = () => {
         controller.abort();
       };
 
-      reqOptions?.signal?.addEventListener(
-        "abort",
-        onExternalAbort,
-        { once: true },
-      );
+      reqOptions?.signal?.addEventListener("abort", onExternalAbort, { once: true });
 
       try {
-        const host: ApiHost = typeof isBff === "boolean"
-          ? (isBff ? "bff" : "rest")
-          : isBff;
+        const host: ApiHost = typeof isBff === "boolean" ? (isBff ? "bff" : "rest") : isBff;
         const url = `${this.urls[host]}${path}`;
-        const response = await this.fetchImpl(
-          `${url}`,
-          {
-            ...options,
-            signal: controller.signal,
-          },
-        );
+        const response = await this.fetchImpl(`${url}`, {
+          ...options,
+          signal: controller.signal,
+        });
 
         this.storeSetCookies(response);
 
         if (!response.ok) {
           const data = await this.readJson(response);
-          const retryAfter =
-            this.parseRetryAfter(response);
+          const retryAfter = this.parseRetryAfter(response);
 
-          if (
-            this.shouldRetry(
-              method,
-              response.status,
-              attempt,
-            )
-          ) {
+          if (this.shouldRetry(method, response.status, attempt)) {
             lastError = new ApiError(
               response.status,
               `Request failed with status ${response.status}`,
@@ -247,20 +194,12 @@ export class HttpClient {
               data,
             );
 
-            await this.delay(
-              attempt,
-              retryAfter,
-            );
+            await this.delay(attempt, retryAfter);
 
             continue;
           }
 
-          handleError(
-            response.status,
-            path,
-            data,
-            retryAfter,
-          );
+          handleError(response.status, path, data, retryAfter);
         }
 
         if (response.status === 204) {
@@ -275,29 +214,15 @@ export class HttpClient {
           throw error;
         }
 
-        if (
-          controller.signal.aborted &&
-          !reqOptions?.signal?.aborted
-        ) {
-          lastError = new TimeoutError(
-            path,
-            this.timeout,
-          );
-        } else if (
-          reqOptions?.signal?.aborted
-        ) {
+        if (controller.signal.aborted && !reqOptions?.signal?.aborted) {
+          lastError = new TimeoutError(path, this.timeout);
+        } else if (reqOptions?.signal?.aborted) {
           throw error;
         } else {
-          lastError = new NetworkError(
-            path,
-            error,
-          );
+          lastError = new NetworkError(path, error);
         }
 
-        if (
-          RETRYABLE_METHODS.has(method) &&
-          attempt < this.retries
-        ) {
+        if (RETRYABLE_METHODS.has(method) && attempt < this.retries) {
           await this.delay(attempt);
           continue;
         }
@@ -306,40 +231,24 @@ export class HttpClient {
       } finally {
         clearTimeout(timer);
 
-        reqOptions?.signal?.removeEventListener(
-          "abort",
-          onExternalAbort,
-        );
+        reqOptions?.signal?.removeEventListener("abort", onExternalAbort);
       }
     }
 
-    throw lastError instanceof Error
-      ? lastError
-      : new NetworkError(path, lastError);
+    throw lastError instanceof Error ? lastError : new NetworkError(path, lastError);
   }
 
-  private async readJson(
-    response: Response,
-  ): Promise<unknown> {
-    const contentType =
-      response.headers.get("content-type");
+  private async readJson(response: Response): Promise<unknown> {
+    const contentType = response.headers.get("content-type");
 
-    if (
-      !contentType?.includes(
-        "application/json",
-      )
-    ) {
+    if (!contentType?.includes("application/json")) {
       return null;
     }
 
     return response.json().catch(() => null);
   }
 
-  private shouldRetry(
-    method: HttpMethod,
-    status: number,
-    attempt: number,
-  ): boolean {
+  private shouldRetry(method: HttpMethod, status: number, attempt: number): boolean {
     if (attempt >= this.retries) {
       return false;
     }
@@ -348,17 +257,11 @@ export class HttpClient {
       return false;
     }
 
-    return (
-      status === 429 ||
-      status >= 500
-    );
+    return status === 429 || status >= 500;
   }
 
-  private parseRetryAfter(
-    response: Response,
-  ): number | undefined {
-    const header =
-      response.headers.get("Retry-After");
+  private parseRetryAfter(response: Response): number | undefined {
+    const header = response.headers.get("Retry-After");
 
     if (!header) {
       return undefined;
@@ -366,23 +269,14 @@ export class HttpClient {
 
     const seconds = Number(header);
 
-    return Number.isFinite(seconds)
-      ? seconds
-      : undefined;
+    return Number.isFinite(seconds) ? seconds : undefined;
   }
 
-  private delay(
-    attempt: number,
-    retryAfterSeconds?: number,
-  ): Promise<void> {
+  private delay(attempt: number, retryAfterSeconds?: number): Promise<void> {
     const ms =
-      retryAfterSeconds !== undefined
-        ? retryAfterSeconds * 1000
-        : this.retryDelay * 2 ** attempt;
+      retryAfterSeconds !== undefined ? retryAfterSeconds * 1000 : this.retryDelay * 2 ** attempt;
 
-    return new Promise((resolve) =>
-      setTimeout(resolve, ms),
-    );
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   /** Выполняет GET-запрос и возвращает разобранный JSON-ответ. */
@@ -391,13 +285,7 @@ export class HttpClient {
     isBff: ApiHost | boolean = "bff",
     options?: RequestOptions,
   ): Promise<unknown> {
-    return this.request(
-      "GET",
-      path,
-      isBff,
-      undefined,
-      options,
-    );
+    return this.request("GET", path, isBff, undefined, options);
   }
 
   /** Выполняет POST-запрос с JSON или `FormData`. */
@@ -407,13 +295,7 @@ export class HttpClient {
     isBff: ApiHost | boolean = "bff",
     options?: RequestOptions,
   ): Promise<unknown> {
-    return this.request(
-      "POST",
-      path,
-      isBff,
-      body,
-      options,
-    );
+    return this.request("POST", path, isBff, body, options);
   }
 
   /** Выполняет PUT-запрос с JSON или `FormData`. */
@@ -423,13 +305,7 @@ export class HttpClient {
     isBff: ApiHost | boolean = "bff",
     options?: RequestOptions,
   ): Promise<unknown> {
-    return this.request(
-      "PUT",
-      path,
-      isBff,
-      body,
-      options,
-    );
+    return this.request("PUT", path, isBff, body, options);
   }
 
   /** Выполняет DELETE-запрос. */
@@ -438,12 +314,6 @@ export class HttpClient {
     isBff: ApiHost | boolean = "bff",
     options?: RequestOptions,
   ): Promise<unknown> {
-    return this.request(
-      "DELETE",
-      path,
-      isBff,
-      undefined,
-      options,
-    );
+    return this.request("DELETE", path, isBff, undefined, options);
   }
 }

@@ -9,5 +9,5 @@ export const CategoryStatResponseSchema = z.object({
   minRating: z.number(),
   maxRating: z.number(),
   avgRating: z.number(),
-  totalRating: z.number()
+  totalRating: z.number(),
 });
