@@ -2,7 +2,7 @@
 
 TypeScript-библиотека для работы с [Playerok REST API](https://playerok.com/).
 
-Библиотека предоставляет удобный клиент для взаимодействия с пользовательскими REST-эндпоинтами Playerok. Большинство доступных на данный момент эндпоинтов реализовано.
+Библиотека предоставляет удобный клиент для взаимодействия с пользовательскими REST-эндпоинтами Playerok. Большинство доступных на данный момент REST эндпоинтов реализовано.
 
 ## Установка
 
@@ -10,7 +10,7 @@ TypeScript-библиотека для работы с [Playerok REST API](https
 pnpm add playerok-api
 ```
 
-Или с помощью npm:
+Или с помощью [npm](https://www.npmjs.com/package/playerok-api):
 
 ```bash
 npm install playerok-api
