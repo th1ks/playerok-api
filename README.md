@@ -1,3 +1,5 @@
+## Не поддерживается с 03.10.26. Новая библиотека - https://github.com/th1ks/PlayerokAPI
+
 # Playerok API SDK
 
 TypeScript-библиотека для работы с [Playerok REST API](https://playerok.com/).
